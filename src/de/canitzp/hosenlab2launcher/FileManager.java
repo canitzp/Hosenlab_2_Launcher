@@ -6,10 +6,17 @@ import java.net.URLConnection;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class FileManager {
+public class FileManager extends Thread{
+
+    public FileManager(){
+        this.setName("FileManager");
+        this.setDaemon(true);
+        this.start();
+    }
 
     public static void downloadFile(String clientName, String serverName){
         File file = new File(Main.launcherPath + clientName);
+        if(file.exists()) file.delete();
         file.getParentFile().mkdirs();
         try {
             URL lib = new URL("http://canitzp.de/Modpacks/Hosenlab%202/" + serverName);
@@ -25,10 +32,13 @@ public class FileManager {
                 bos.write(b, 0, read);
                 long p = (file.length() * 100) / onlineFileSize;
                 if(p == i){
-                    System.out.println(p + "%");
-                    Main.window.addToTextArea(p + "%");
+                    System.out.println(i + "%");
+                    if(i == 10 || i == 20 || i == 30 || i == 40 || i == 50 || i == 60 || i == 70 || i == 80 || i == 90 ) Main.window.addToTextArea(p + "%");
+                    if(i >= 99) Main.window.addToTextArea("100% - Download Complete!\nStarting unzipping!");
+                    //Main.window.update();
                     i++;
                 }
+
             }
             bos.flush();
             bos.close();
@@ -38,48 +48,16 @@ public class FileManager {
         }
     }
 
-    public static void download1710Libs(String modpack){
-        downloadFile("modpacks/" + modpack + "/cache/Libraries.zip", "libs.zip");
-        downloadFile("modpacks/" + modpack + "/cache/Assets.zip", "assets.zip");
-        unZipIt(System.getProperty("user.home") + "/AppData/Roaming/.dqm-launcher/modpacks/" + modpack + "/cache/Libraries.zip", System.getProperty("user.home") + "/AppData/Roaming/.dqm-launcher/modpacks/" + modpack + "/libs/");
-        unZipIt(System.getProperty("user.home") + "/AppData/Roaming/.dqm-launcher/modpacks/" + modpack + "/cache/Assets.zip", System.getProperty("user.home") + "/AppData/Roaming/.dqm-launcher/modpacks/" + modpack + "/");
-    }
-
-    public static boolean checkDatei(String name){
-        File file = new File(System.getProperty("user.home") + "/AppData/Roaming/.dqm-launcher/" + name);
-        return file.exists();
-    }
-
-    public static void dateianlage(String name){
-        File file = new File(System.getProperty("user.home") + "/AppData/Roaming/.dqm-launcher/" + name);
-        file.getParentFile().mkdirs();
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void runProcess(String command) {
-        try {
-            Process pro = Runtime.getRuntime().exec(command);
-            pro.waitFor();
-            pro.destroy();
-            pro.destroyForcibly();
-            System.out.println(command);
-        } catch (Throwable t) {
-            System.out.println(command);
-            t.printStackTrace();
-        }
-
+        new Process(true).runProcess(command);
     }
 
-    public static String getLib(String name){
-        return Main.launcherPath + "libraries\\" + name;
+    private static String getLib(String name){
+        return "\"" + Main.launcherPath.getAbsolutePath() + "/libraries/" + name;
     }
 
     public static String getLibP(String name){
-        return getLib(name) + " ";
+        return getLib(name) + "\";";
     }
 
     public static String get1710Libs(){
@@ -93,9 +71,9 @@ public class FileManager {
 
     public static String get1710ForgeLibs(){
         return getLibP("akka-actor_2.11-2.3.3.jar") + getLibP("asm-all-5.0.3.jar") + getLibP("commons-lang3-3.3.2.jar") + getLibP("config-1.2.1.jar") + getLibP("guava-17.0.jar") + getLibP("launchwrapper-1.11.jar")
-                + getLibP("lzma-0.0.1.jar") + getLibP("modpack.jar") + getLibP("scala-actors-migration_2.11-1.1.0.jar") + getLibP("scala-compiler-2.11.1.jar") + getLibP("scala-continuations-library_2.11-1.0.2.jar")
+                + getLibP("lzma-0.0.1.jar") + getLibP("scala-actors-migration_2.11-1.1.0.jar") + getLibP("scala-compiler-2.11.1.jar") + getLibP("scala-continuations-library_2.11-1.0.2.jar")
                 + getLibP("scala-continuations-plugin_2.11.1-1.0.2.jar") + getLibP("scala-library-2.11.1.jar") + getLibP("scala-parser-combinators_2.11-1.0.1.jar") + getLibP("scala-reflect-2.11.1.jar")
-                + getLibP("scala-swing_2.11-1.0.1.jar") + getLibP("scala-xml_2.11-1.0.2.jar");
+                + getLibP("scala-swing_2.11-1.0.1.jar") + getLibP("scala-xml_2.11-1.0.2.jar") + getLibP("1.7.10.jar") + getLibP("modpack.jar");
     }
 
     /*
@@ -107,7 +85,7 @@ public class FileManager {
             //create output directory is not exists
             File folder = new File(outputFolder);
             if(!folder.exists()){
-                folder.getParentFile().mkdir();
+                folder.getParentFile().mkdirs();
             }
             //get the zip file content
             ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
@@ -135,6 +113,7 @@ public class FileManager {
             zis.closeEntry();
             zis.close();
             System.out.println("Done");
+            Main.window.addToTextArea("UnZip Complete! Now you can play!");
         }catch(IOException ex){
             ex.printStackTrace();
         }
