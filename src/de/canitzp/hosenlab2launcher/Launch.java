@@ -15,30 +15,35 @@ import java.util.Map;
 
 public class Launch {
 
-    private static String natives = Main.launcherPath.getAbsolutePath() + "/libraries/natives";
-    private static String libs = FileManager.get1710Libs() + FileManager.get1710ForgeLibs();
+    private static String natives;
+    private static String libs;
     private static String mainClass = "net.minecraft.launchwrapper.Launch";
     private static String gameDir = Main.launcherPath.getAbsolutePath() + "";
-    private static String assetsDir = Main.launcherPath.getAbsolutePath() + "/assets";
+    private static String assetsDir;
     private static String tweakClass = "cpw.mods.fml.common.launcher.FMLTweaker";
     private static String username;
     private static String password;
     private static Map<String, String> map = new HashMap<>();
 
-    public static boolean launchGame(String user, String passcode){
-
+    public static int launchGame(String user, String passcode, Modpacks modpack){
         username = user;
         password = passcode;
+        gameDir = Main.launcherPath.getAbsolutePath()  + "/Modpacks/" + modpack.getFolderName();
+        natives = Main.launcherPath.getAbsolutePath() + "/Modpacks/" + modpack.getFolderName() + "/libraries/natives";
+        libs = FileManager.get1710Libs(modpack) + FileManager.get1710ForgeLibs();
+        assetsDir = Main.launcherPath.getAbsolutePath() + "/Modpacks/" + modpack.getFolderName() + "/assets";
         if(requestUser()){
-            FileManager.runProcess(commandCreator("java", 2048));
-            de.canitzp.console.Main.main(new String[]{});
+            try{
+                FileManager.runProcess(commandCreator(), Main.launcherPath.getAbsolutePath() + "\\Modpacks\\" + modpack.getFolderName());
+                Main.window.addToTextArea("Username and Password accepted!\nStarting Minecraft " + modpack.getDisplayName() + ".");
+            } catch (Throwable e){
+                return -1;
+            }
         } else {
-            Main.window.addToTextArea("Wrong Username or Password!");
-            Main.username = null;
-            Main.password = null;
-            return false;
+            Main.restart("Wrong Username or Password!");
+            return 1;
         }
-        return true;
+         return 0;
     }
 
     private static boolean requestUser(){
@@ -48,7 +53,6 @@ public class Launch {
         try {
             authentication.logIn();
         } catch (AuthenticationException e) {
-
             e.printStackTrace();
             return false;
         }
@@ -60,12 +64,12 @@ public class Launch {
         return true;
     }
 
-    private static String commandCreator(String java, int ramMB){
+    private static String commandCreator(){
         String command = "";
         ArrayList<String> list = new ArrayList<>();
-        list.add(java);
+        list.add("\"" + Main.java.replace("\"", "") + "\"");
         list.add(" -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump");
-        list.add(" -Xmx" + ramMB + "M");
+        list.add(" -Xmx" + Main.maxRam + "M");
         list.add(" -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:-UseAdaptiveSizePolicy -Xmn512M");
         list.add(" -Djava.library.path=\"" + natives.replace("/", "\\") + "\"");
         list.add(" -cp " + libs.replace("/", "\\"));
@@ -80,7 +84,7 @@ public class Launch {
         list.add(" --userType " + map.get("userType"));
         list.add(" --uuid " + map.get("uuid"));
         list.add(" --tweakClass " + tweakClass);
-        list.add(" --debug");
+        //list.add(" --debug");
 
         for(String s : list){
             command += s;

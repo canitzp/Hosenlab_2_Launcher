@@ -20,27 +20,28 @@ public class Update extends Thread{
         this.start();
     }
 
-    public void updatePack(String username, String password){
-        File file = new File(Main.launcherPath + "/update.txt");
-        if(file.exists())isUpToDate(username, password);
-        else update();
+    public void updatePack(Modpacks modpack){
+        File file = new File(Main.launcherPath.getAbsolutePath() + "/Modpacks/" + modpack.getFolderName() + "/update.txt");
+        System.out.println(file.getAbsolutePath());
+        if(file.exists())isUpToDate(modpack);
+        else update(modpack);
     }
 
-    private void isUpToDate(String username, String password){
-        String newest = "http://canitzp.de/Modpacks/Hosenlab%202/update.txt";
+    private void isUpToDate(Modpacks modpack){
+        String newest = modpack.getVersion();
         URL newestURL = null;
-        File updateTXT = new File(Main.launcherPath + "/update.txt");
+        File updateTXT = new File(Main.launcherPath + "/Modpacks/" + modpack + "/update.txt");
         try {
-            newestURL = new URL(newest);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(newestURL.openStream()));
-            String newestVersion = bufferedReader.readLine().replace(".", "");
+            //newestURL = new URL(newest);
+            //BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(newestURL.openStream()));
+            //String newestVersion = bufferedReader.readLine().replace(".", "");
             FileReader fr = new FileReader(updateTXT);
             BufferedReader br = new BufferedReader(fr);
             String installedVersion = br.readLine().replace(".", "");
             //System.out.println(newestVersion);
             //System.out.println(installedVersion);
-            if(!Objects.equals(newestVersion, installedVersion)){
-                Main.window.addToTextArea("There is an Update!\nInstalled Version: " + installedVersion + " Newest Version:" + newestVersion);
+            if(!Objects.equals(newest.replace(".", ""), installedVersion)){
+                Main.window.addToTextArea("There is an Update!\nInstalled Version: " + installedVersion + " Newest Version:" + newest);
                 JFrame updateFrame = new JFrame("Update?");
                 textArea.setEditable(false);
                 DefaultCaret caret = (DefaultCaret)textArea.getCaret();
@@ -55,45 +56,53 @@ public class Update extends Thread{
                 container.add(textArea, BorderLayout.CENTER);
                 updateFrame.setVisible(true);
                 updateFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-                btn1.addActionListener(e -> {updateFrame.dispose(); update();});
+                btn1.addActionListener(e -> {updateFrame.dispose(); update(modpack);});
                 btn2.addActionListener(e -> {
-                    launch(username, password);
+                    launch(modpack);
                     updateFrame.dispose();
                 });
-            } else launch(username, password);
+            } else launch(modpack);
         } catch (Throwable t) {
             t.printStackTrace();
         }
     }
 
-    private void update(){
-        if(!new File(Main.launcherPath + "/libraries/gson-2.2.4.jar").exists()) updateLibs();
+    private void update(Modpacks modpack){
+        if(!new File(Main.launcherPath + "/Modpacks/" + modpack.getFolderName() + "/libraries/gson-2.2.4.jar").exists()) updateLibs(modpack);
         Main.window.addToTextArea("==> Start to download Mods and Configurations! <==");
         Main.window.update();
-        new FileManager().downloadFile("/cache/modpack.zip", "modpack.zip");
-        new FileManager().unZipIt(Main.cachePath + "/modpack.zip", Main.launcherPath + "/");
-        new FileManager().downloadFile("/update.txt", "update.txt");
+        FileManager.downloadModpack(modpack);
+        FileManager.unZipIt(Main.launcherPath + "/Modpacks/" + modpack.getFolderName() + "/cache/" + "/modpack.zip", Main.launcherPath + "/Modpacks/" + modpack.getFolderName() + "/");
+        //new FileManager(modpack).downloadFile("/update.txt", "update.txt");
+        FileManager.createFile(modpack, "/update.txt", modpack.getVersion());
     }
 
-    private void updateLibs(){
+    private void updateLibs(Modpacks modpack){
         Main.window.addToTextArea("==> Start to download Libraries! <==");
         Main.window.update();
-        new FileManager().downloadFile("/cache/libs.zip", "libs.zip");
-        new FileManager().unZipIt(Main.cachePath + "/libs.zip", Main.launcherPath + "/libraries/");
+        FileManager.downloadLibs(modpack);
+        FileManager.unZipIt(Main.launcherPath + "/Modpacks/" + modpack.getFolderName() + "/cache/" + "/libs.zip", Main.launcherPath + "/Modpacks/" + modpack.getFolderName() + "/libraries/");
+        Main.window.clear();
+        Main.window.addToTextArea("==> Downloading Libraries complete! <==");
         Main.window.addToTextArea("==> Start to download Assets! <==");
         Main.window.update();
-        new FileManager().downloadFile("/cache/assets.zip", "assets.zip");
-        new FileManager().unZipIt(Main.cachePath + "/assets.zip", Main.launcherPath + "/");
+        FileManager.downloadAssets(modpack);
+        FileManager.unZipIt(Main.launcherPath + "/Modpacks/" + modpack.getFolderName() + "/cache/" + "/assets.zip", Main.launcherPath + "/Modpacks/" + modpack.getFolderName() + "/");
+        Main.window.clear();
+        Main.window.addToTextArea("==> Downloading Libraries complete! <==");
+        Main.window.addToTextArea("==> Downloading Assets complete! <==");
     }
 
-    private boolean launch(String username, String password){
-        if(Launch.launchGame(username, password)){
-            Main.stop();
-            return true;
-        } else {
-            Main.restart();
-            return false;
+    private void launch(Modpacks modpack) {
+        int i = Launch.launchGame(Main.username, Main.password, modpack);
+        if(i == 0){
+            Main.startMC();
         }
-
+        if(i == 1){
+            Main.restart("Wrong Username or Password!");
+        }
+        if(i == -1){
+            Main.restart("Java Variable is Wrong. Please check this!");
+        }
     }
 }

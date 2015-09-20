@@ -8,18 +8,21 @@ import java.util.zip.ZipInputStream;
 
 public class FileManager extends Thread{
 
-    public FileManager(){
+    private static Modpacks modpack;
+
+    public FileManager(Modpacks pack){
         this.setName("FileManager");
         this.setDaemon(true);
         this.start();
+        modpack = pack;
     }
 
-    public static void downloadFile(String clientName, String serverName){
-        File file = new File(Main.launcherPath + clientName);
+    private static void downloadFile(String folder, String url){
+        File file = new File(Main.launcherPath + "/Modpacks/" + folder);
         if(file.exists()) file.delete();
         file.getParentFile().mkdirs();
         try {
-            URL lib = new URL("http://canitzp.de/Modpacks/Hosenlab%202/" + serverName);
+            URL lib = new URL("http://" + url);
             URLConnection urlConnection = lib.openConnection();
             BufferedInputStream bis = new BufferedInputStream(urlConnection.getInputStream());
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
@@ -48,19 +51,31 @@ public class FileManager extends Thread{
         }
     }
 
-    public static void runProcess(String command) {
-        new Process(true).runProcess(command);
+    public static void downloadModpack(Modpacks modpack){
+        downloadFile("/" + modpack.getFolderName() + "/cache/modpack.zip", modpack.getUrlModsAndConfigs());
+    }
+    public static void downloadLibs(Modpacks modpack){
+        downloadFile("/" + modpack.getFolderName() + "/cache/libs.zip", Modpacks.LIBS.getUrlModsAndConfigs());
+    }
+    public static void downloadAssets(Modpacks modpack){
+        downloadFile("/" + modpack.getFolderName() + "/cache/assets.zip", Modpacks.ASSETS.getUrlModsAndConfigs());
+    }
+
+
+    public static void runProcess(String command, String dir) throws IOException{
+        new Process(true).runProcess(command, dir);
     }
 
     private static String getLib(String name){
-        return "\"" + Main.launcherPath.getAbsolutePath() + "/libraries/" + name;
+        return "\"" + Main.launcherPath.getAbsolutePath() + "/Modpacks/" + modpack.getFolderName() + "/libraries/" + name;
     }
 
     public static String getLibP(String name){
         return getLib(name) + "\";";
     }
 
-    public static String get1710Libs(){
+    public static String get1710Libs(Modpacks pack){
+        modpack = pack;
         return getLibP("gson-2.2.4.jar") + getLibP("guava-15-0.jar") + getLibP("icu4j-core-mojang-51.2.jar") + getLibP("authlib-1.5.21.jar") + getLibP("realms-1.3.5.jar") + getLibP("codecjorbis-20101023.jar")
                 + getLibP("codecwav-20101023.jar") + getLibP("libraryjavasound-20101123.jar") + getLibP("librarylwjglopenal-20100824.jar") + getLibP("soundsystem-20120107.jar") + getLibP("commons-codec-1.9.jar")
                 + getLibP("commons-io-2.4.jar") + getLibP("commons-logging-1.1.3.jar") + getLibP("netty-all-4.0.10.Final.jar") + getLibP("vecmath-1.3.1.jar") + getLibP("jinput-2.0.5.jar") + getLibP("jinput-platform-2.0.5-natives-windows.jar")
@@ -116,6 +131,20 @@ public class FileManager extends Thread{
             Main.window.addToTextArea("UnZip Complete! Now you can play!");
         }catch(IOException ex){
             ex.printStackTrace();
+        }
+    }
+
+    public static void createFile(Modpacks modpack, String folder, String toWrite){
+        File file = new File(Main.launcherPath.getAbsolutePath() + "/Modpacks/" + modpack.getFolderName() + folder);
+        if(file.exists()) file.delete();
+        file.getParentFile().mkdirs();
+        try {
+            BufferedWriter br = new BufferedWriter(new FileWriter(file));
+            br.append(toWrite);
+            br.flush();
+            br.close();
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 }
