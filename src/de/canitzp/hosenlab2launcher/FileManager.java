@@ -17,7 +17,7 @@ public class FileManager extends Thread{
         modpack = pack;
     }
 
-    private static void downloadFile(String folder, String url){
+    public static void downloadFile(String folder, String url){
         File file = new File(Main.launcherPath + "/Modpacks/" + folder);
         if(file.exists()) file.delete();
         file.getParentFile().mkdirs();

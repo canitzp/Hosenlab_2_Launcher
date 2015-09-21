@@ -1,8 +1,10 @@
 package de.canitzp.hosenlab2launcher;
 
+import de.canitzp.hosenlab2launcher.frames.UpdateFrame;
+import de.canitzp.hosenlab2launcher.frames.Window;
+
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 public class Main {

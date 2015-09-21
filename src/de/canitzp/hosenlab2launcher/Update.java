@@ -1,5 +1,7 @@
 package de.canitzp.hosenlab2launcher;
 
+import de.canitzp.hosenlab2launcher.frames.UpdateFrame;
+
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
@@ -22,25 +24,30 @@ public class Update extends Thread{
 
     public void updatePack(Modpacks modpack){
         File file = new File(Main.launcherPath.getAbsolutePath() + "/Modpacks/" + modpack.getFolderName() + "/update.txt");
-        System.out.println(file.getAbsolutePath());
         if(file.exists())isUpToDate(modpack);
         else update(modpack);
     }
 
+    private static String newestV;
+
     private void isUpToDate(Modpacks modpack){
-        String newest = modpack.getVersion();
+        String newest = "http://" + modpack.getUrlVersionTXT();
         URL newestURL = null;
         File updateTXT = new File(Main.launcherPath + "/Modpacks/" + modpack + "/update.txt");
         try {
-            //newestURL = new URL(newest);
-            //BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(newestURL.openStream()));
-            //String newestVersion = bufferedReader.readLine().replace(".", "");
+            newestURL = new URL(newest);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(newestURL.openStream()));
+            String newestVersion = bufferedReader.readLine().replace(".", "");
             FileReader fr = new FileReader(updateTXT);
             BufferedReader br = new BufferedReader(fr);
             String installedVersion = br.readLine().replace(".", "");
             //System.out.println(newestVersion);
             //System.out.println(installedVersion);
-            if(!Objects.equals(newest.replace(".", ""), installedVersion)){
+            if(!Objects.equals(newestVersion.replace(".", ""), installedVersion)){
+
+                new UpdateFrame(modpack);
+
+                /*
                 Main.window.addToTextArea("There is an Update!\nInstalled Version: " + installedVersion + " Newest Version:" + newest);
                 JFrame updateFrame = new JFrame("Update?");
                 textArea.setEditable(false);
@@ -61,20 +68,21 @@ public class Update extends Thread{
                     launch(modpack);
                     updateFrame.dispose();
                 });
+                 */
             } else launch(modpack);
         } catch (Throwable t) {
             t.printStackTrace();
         }
     }
 
-    private void update(Modpacks modpack){
+    public void update(Modpacks modpack){
         if(!new File(Main.launcherPath + "/Modpacks/" + modpack.getFolderName() + "/libraries/gson-2.2.4.jar").exists()) updateLibs(modpack);
         Main.window.addToTextArea("==> Start to download Mods and Configurations! <==");
         Main.window.update();
         FileManager.downloadModpack(modpack);
         FileManager.unZipIt(Main.launcherPath + "/Modpacks/" + modpack.getFolderName() + "/cache/" + "/modpack.zip", Main.launcherPath + "/Modpacks/" + modpack.getFolderName() + "/");
-        //new FileManager(modpack).downloadFile("/update.txt", "update.txt");
-        FileManager.createFile(modpack, "/update.txt", modpack.getVersion());
+        FileManager.downloadFile("/" + modpack.getFolderName() + "/update.txt", modpack.getUrlVersionTXT());
+        //FileManager.createFile(modpack, "/update.txt", modpack.getVersion());
     }
 
     private void updateLibs(Modpacks modpack){
@@ -93,7 +101,7 @@ public class Update extends Thread{
         Main.window.addToTextArea("==> Downloading Assets complete! <==");
     }
 
-    private void launch(Modpacks modpack) {
+    public void launch(Modpacks modpack) {
         int i = Launch.launchGame(Main.username, Main.password, modpack);
         if(i == 0){
             Main.startMC();

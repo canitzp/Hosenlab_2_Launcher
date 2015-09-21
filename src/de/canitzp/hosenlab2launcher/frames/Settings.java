@@ -2,7 +2,9 @@
  * Created by JFormDesigner on Sun Sep 20 21:25:56 CEST 2015
  */
 
-package de.canitzp.hosenlab2launcher;
+package de.canitzp.hosenlab2launcher.frames;
+
+import de.canitzp.hosenlab2launcher.Main;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -93,8 +95,8 @@ public class Settings extends JFrame {
             gbc.gridy++;
             add(button, gbc);
         }
-
     }
+
     public class NamePane extends JPanel {
 
         public NamePane() {

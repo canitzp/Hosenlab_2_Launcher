@@ -1,9 +1,10 @@
-package de.canitzp.hosenlab2launcher;
+package de.canitzp.hosenlab2launcher.frames;
+
+import de.canitzp.hosenlab2launcher.Main;
+import de.canitzp.hosenlab2launcher.Modpacks;
+import de.canitzp.hosenlab2launcher.UpdateChecker;
 
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
 
@@ -54,9 +55,10 @@ public class Window extends JFrame{
         button = new JButton("Launch Game");
         button.addActionListener(e -> {
             if (Main.username != null && Main.password != null) {
-                UpdateChecker.checkForUpdate((String)comboBox.getSelectedItem());
+                UpdateChecker.checkForUpdate((String) comboBox.getSelectedItem());
             } else {
                 new Settings();
+                UpdateChecker.checkForUpdate((String) comboBox.getSelectedItem());
             }
 
         });

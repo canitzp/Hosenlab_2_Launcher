@@ -4,16 +4,16 @@ public enum Modpacks {
 
     LIBS("Libraries", "libraries", "canitzp.de/Modpacks/libs.zip", "1"),
     ASSETS("Assets", "assets" , "canitzp.de/Modpacks/assets.zip", "1"),
-    HOSENLAB2("Hosenlab 2", "hosenlab2", "canitzp.de/Modpacks/Hosenlab%202/modpack.zip", "0.0.2"),
-    TECHNICUNIVERSE("TechnicUniverse", "technicuniverse", "ni62659_2.fastdownload.nitrado.net/TeamFactionModpack.zip", "1.3");
+    HOSENLAB2("Hosenlab 2", "hosenlab2", "canitzp.de/Modpacks/Hosenlab%202/modpack.zip", "canitzp.de/Modpacks/Hosenlab%202/update.txt"),
+    TECHNICUNIVERSE("TechnicUniverse", "technicuniverse", "ni62659_2.fastdownload.nitrado.net/TeamFactionModpack.zip", "null");
 
 
-    private String displayName, folderName, urlModsAndConfigs, version;
-    Modpacks(String displayName, String folderName, String urlModsAndConfigs, String version){
+    private String displayName, folderName, urlModsAndConfigs, urlVersionTXT;
+    Modpacks(String displayName, String folderName, String urlModsAndConfigs, String urlVersionTXT){
         this.displayName = displayName;
         this.folderName = folderName;
         this.urlModsAndConfigs = urlModsAndConfigs;
-        this.version = version;
+        this.urlVersionTXT = urlVersionTXT;
     }
 
     public String getDisplayName() {
@@ -28,7 +28,7 @@ public enum Modpacks {
         return urlModsAndConfigs;
     }
 
-    public String getVersion() {
-        return version;
+    public String getUrlVersionTXT() {
+        return urlVersionTXT;
     }
 }
