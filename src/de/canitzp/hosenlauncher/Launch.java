@@ -8,6 +8,7 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
+import javafx.application.Platform;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +57,7 @@ public class Launch {
             map.put("username", authentication.getSelectedProfile().getName());
             map.put("userType", authentication.getUserType().getName());
             map.put("userProperties", (new GsonBuilder()).registerTypeAdapter(PropertyMap.class, new OldPropertyMapSerializer()).create().toJson(authentication.getUserProperties()));
+            Platform.runLater(() -> Variables.mainController.changeHead(authentication.getSelectedProfile().getName()));
             return true;
         } catch (AuthenticationException e) {
             e.printStackTrace();

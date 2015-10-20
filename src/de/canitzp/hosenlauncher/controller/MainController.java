@@ -9,10 +9,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileInputStream;
+
 @SuppressWarnings("unchecked")
 public class MainController {
 
     private Main main;
+    @FXML public ImageView headImage;
     @FXML public ProgressBar progress = new ProgressBar();
     @FXML public Button infoBtn;
     @FXML public Button startBtn;
@@ -57,7 +61,7 @@ public class MainController {
     }
 
     public void startup() {
-
+        if(new File(Variables.launcherPath.getAbsolutePath() + File.separator + "head.png").exists()) headImage.setImage(new Image(new File(Variables.launcherPath.getAbsolutePath() + File.separator + "head.png").toURI().toString()));
         this.userField.setText(Variables.username);
         this.passField.setText(Variables.password);
         this.dropDown.setValue(Modpacks.HOSENLAB2.getDisplayName());
@@ -81,5 +85,10 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void changeHead(String username){
+        FileManager.download(new File(Variables.launcherPath.getAbsolutePath() + File.separator + "head.png"), "http://www.minotar.net/helm/" + username + "/24");
+        headImage.setImage(new Image(new File(Variables.launcherPath.getAbsolutePath() + File.separator + "head.png").toURI().toString()));
     }
 }
