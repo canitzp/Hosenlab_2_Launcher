@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="512.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.canitzp.hosenlauncher.controller.DescriptionController">
+   <children>
+      <Label fx:id="modpackLabel" alignment="CENTER" layoutX="242.0" layoutY="6.0" prefHeight="25.0" text="Modpack" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="2.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <ScrollPane layoutX="168.0" layoutY="125.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="508.0" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="27.0">
+         <content>
+            <TextArea fx:id="descField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="365.0" prefWidth="476.0" />
+         </content>
+      </ScrollPane>
+      <Button fx:id="serverBtn" layoutX="14.0" layoutY="424.0" mnemonicParsing="false" onAction="#downlaodServerHandler" text="Download Server" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="15.0" />
+      <Button fx:id="backLauncher" layoutX="358.0" layoutY="423.0" mnemonicParsing="false" onAction="#backToLauncherHandler" text="Zurück zum Launcher" AnchorPane.bottomAnchor="2.0" AnchorPane.rightAnchor="15.0" />
+   </children>
+</AnchorPane>
