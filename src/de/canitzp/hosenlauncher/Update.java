@@ -19,20 +19,18 @@ public class Update{
     }
 
     private void updatePack(Modpacks modpack) {
-        if(Launch.requestUser(Variables.username, Variables.password)){
             File file = new File(Variables.launcherPath.getAbsolutePath() + File.separator + "Modpacks" + File.separator + modpack.getFolderName() + File.separator + "update.txt");
             if(file.exists() && new File(Variables.launcherPath + File.separator + "Modpacks" + File.separator + modpack.getFolderName() + File.separator + "bin/Minecraft-" + modpack.getForgeVersion().getMCVersion().getName() + ".jar").exists())isUpToDate(modpack);
             else update(modpack);
-        } else Variables.mainController.addToLog("Falsche Anmeldedaten. Bitte diese \u00fcberpr\u00fcfen!");
     }
 
     public static void update(Modpacks modpack){
         boolean b = false;
         Variables.mainController.startBtn.setDisable(true);
         if(!new File(Variables.launcherPath + File.separator + "Modpacks" + File.separator + modpack.getFolderName() + File.separator + "bin/Minecraft-" + modpack.getForgeVersion().getMCVersion().getName() + ".jar").exists()) {updateLibs(modpack); b = true;}
-        Variables.mainController.addToLog("--> L\u00f6schen alter Mods und Konfigurationsdateien!");
+        Variables.mainController.addToLog("--> L\u00f6schen des alten Mods-Ordner!");
         FileManager.deleteFile(modpack + "/mods");
-        FileManager.deleteFile(modpack + "/config");
+        //FileManager.deleteFile(modpack + "/config");
         Variables.mainController.addToLog("--> Download Mods und Konfigurationen!");
         FileManager.downloadFile(modpack.getFolderName() + File.separator + "bin" + File.separator + "Forge-" + modpack.getForgeVersion().getName() + ".jar", modpack.getForgeVersion().getDownloadUrl());
         FileManager.downloadModpack(modpack);

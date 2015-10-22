@@ -29,7 +29,6 @@ public class DescriptionController {
     }
 
     public void downlaodServerHandler(ActionEvent actionEvent) {
-        if(Launch.requestUser(Variables.username, Variables.password)){
             DirectoryChooser chooser = new DirectoryChooser();
             Modpacks modpacks = FileManager.getModpackFromString((String) Variables.mainController.dropDown.getValue());
             File path = chooser.showDialog(null);
@@ -47,7 +46,6 @@ public class DescriptionController {
                 Variables.mainController.addToLog("Serverdownload in das Verzeichnis \"" + path + File.separator + "\" gestartet!");
                 thread.start();
             }
-        }
     }
 
     public void backToLauncherHandler(ActionEvent actionEvent) {

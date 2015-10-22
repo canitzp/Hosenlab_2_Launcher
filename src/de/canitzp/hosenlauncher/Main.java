@@ -1,5 +1,6 @@
 package de.canitzp.hosenlauncher;
 
+import de.canitzp.hosenlauncher.controller.LoginController;
 import de.canitzp.hosenlauncher.controller.MainController;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -14,11 +15,15 @@ import java.io.IOException;
 public class Main extends Application {
 
     public static Stage primaryStage;
+    public static boolean wait;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Main.primaryStage = primaryStage;
-        createMainWindow();
+        if(Variables.loginMap == null){
+            login();
+            Variables.save.delete();
+        } else createMainWindow();
     }
 
     public static void main(String[] args){
@@ -43,18 +48,13 @@ public class Main extends Application {
         }
     }
 
-    private void createMainWindow(){
+    public static void createMainWindow() {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("fxml/Main.fxml"));
             AnchorPane pane = loader.load();
-            primaryStage.setMaxWidth(720D);
-            primaryStage.setMaxHeight(480D);
-            primaryStage.setMinHeight(480D);
-            primaryStage.setMinWidth(720D);
             primaryStage.setTitle("Hosenlauncher BETA");
             MainController mainController = loader.getController();
             Variables.mainController = mainController;
-            mainController.setMain(this);
             primaryStage.setScene(new Scene(pane));
             primaryStage.setResizable(false);
             primaryStage.show();
@@ -65,6 +65,27 @@ public class Main extends Application {
                 Variables.save.saveVariables();
             });
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void login(){
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("fxml/Login.fxml"));
+            AnchorPane pane = loader.load();
+            primaryStage.setTitle("Hosenlauncher BETA");
+            LoginController loginController = loader.getController();
+            primaryStage.setScene(new Scene(pane));
+            primaryStage.setResizable(false);
+            primaryStage.show();
+            primaryStage.setOnCloseRequest(t -> {
+                System.gc();
+                if (loginController.userFieled == null || loginController.passField == null) {
+                    System.exit(0);
+                }
+            });
+        }catch (IOException e){
             e.printStackTrace();
         }
     }

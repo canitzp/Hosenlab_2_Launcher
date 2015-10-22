@@ -11,14 +11,14 @@
       <Button fx:id="settingsBtn" layoutX="665.0" layoutY="454.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#settingsBtnHandler" prefHeight="25.0" prefWidth="25.0" AnchorPane.bottomAnchor="2.0" AnchorPane.rightAnchor="2.0" />
       <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="386.0" prefWidth="720.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
          <content>
-            <TextArea fx:id="logField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="371.0" prefWidth="699.0" />
+            <TextArea fx:id="logField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="705.0" />
          </content>
       </ScrollPane>
       <ComboBox fx:id="dropDown" layoutX="229.0" layoutY="2.0" prefWidth="150.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="29.0" AnchorPane.topAnchor="2.0" />
-      <HBox alignment="CENTER" layoutX="260.0" layoutY="455.0" prefHeight="25.0" prefWidth="200.0" spacing="5.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="55.0">
+      <HBox alignment="CENTER" layoutX="260.0" layoutY="455.0" prefHeight="25.0" prefWidth="200.0" spacing="20.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="55.0">
          <children>
-            <TextField fx:id="userField" onKeyPressed="#usernameKeyHandler" promptText="Username" />
-            <PasswordField fx:id="passField" onKeyPressed="#passwordKeyHandler" promptText="Password" />
+            <Label fx:id="userLabel" text="Label" />
+            <ImageView fx:id="headImage" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" />
             <Button fx:id="startBtn" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#startGame" text="Start Game" HBox.hgrow="NEVER">
                <HBox.margin>
                   <Insets />
@@ -28,6 +28,5 @@
       </HBox>
       <Button fx:id="infoBtn" layoutX="680.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#infoHandler" prefHeight="25.0" prefWidth="25.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
       <ProgressBar fx:id="progress" layoutX="260.0" layoutY="422.0" prefWidth="200.0" progress="0.0" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-      <ImageView fx:id="headImage" fitHeight="25.0" fitWidth="25.0" layoutX="667.0" layoutY="454.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="2.0" AnchorPane.rightAnchor="29.0" />
    </children>
 </AnchorPane>

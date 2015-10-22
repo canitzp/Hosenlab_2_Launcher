@@ -4,14 +4,18 @@ import de.canitzp.hosenlauncher.controller.DescriptionController;
 import de.canitzp.hosenlauncher.controller.MainController;
 import de.canitzp.hosenlauncher.controller.SettingsController;
 import de.canitzp.hosenlauncher.controller.UpdateWindowController;
+import javafx.application.Platform;
+import javafx.stage.Stage;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.util.Map;
 
+@SuppressWarnings("ALL")
 public class Variables {
 
     public static String username, password;
-    public static int maxRam, minRam;
+    public static int maxRam = 1024, minRam =  128;
     public static boolean debug, outputOn = false, isSettings, isDesc;
     public static File launcherPath = new File("Hosenlab2Launcher" + File.separator);
     public static Thread startThread, launchThread;
@@ -22,29 +26,31 @@ public class Variables {
     public static InputStream input;
     public static DescriptionController descriptionController;
     public static File launcherSettings = new File(launcherPath.getAbsolutePath() + "/settings.txt");
+    public static Map<String, Object> loginMap;
 
     public static void startup(){
         try {
-            if (save.exists() && save.read("username") != null) {
-                username = (String) save.read("username");
-                password = save.readPassword();
-                maxRam = (int) save.read("maxRam");
-                minRam = (int) save.read("minRam");
-                debug = (boolean) save.read("debug");
-            } else {
-                username = null;
-                password = null;
-                maxRam = 1024;
-                minRam = 128;
-                debug = false;
+            if(save.exists()){
+                if(save.read("loginMap") != null){
+                    Variables.loginMap = (Map<String, Object>) save.read("loginMap");
+                } else loginMap = null;
+                if(save.read("maxRam") != null){
+                    maxRam = (int) save.read("maxRam");
+                } else maxRam = 1024;
+                if(save.read("minRam") != null){
+                    minRam = (int) save.read("minRam");
+                } else minRam = 128;
+                if(save.read("debug") != null){
+                    debug = (boolean) save.read("debug");
+                } else debug = false;
             }
         } catch (Throwable e) {
-            username = null;
-            password = null;
             maxRam = 1024;
             minRam = 128;
             debug = false;
+            loginMap = null;
         }
+
     }
 
     public static boolean isDebug() {

@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class Launch {
 
-    private static Map map = Maps.newHashMap();
+    private static Map map = Variables.loginMap;
     private static String natives, mainClass = "net.minecraft.launchwrapper.Launch", gameDir, assetsDir, tweakClass = "cpw.mods.fml.common.launcher.FMLTweaker", libs;
 
     public static void launchGame(String username, String password, Modpacks modpack) {
@@ -29,41 +29,19 @@ public class Launch {
         assetsDir = gameDir + File.separator + "assets";
         natives = gameDir + File.separator + "libraries" + File.separator + "natives";
         libs = FileManager.get1710Libs(modpack) + FileManager.get1710ForgeLibs(modpack);
-        if(requestUser(username, password)){
-            Variables.mainController.addToLog("Das Spiel wird in ein paar Sekunden gestartet!");
-            Variables.save.saveVariables();
-            Variables.launchThread = new Thread(() -> {
-                try {
-                    Runtime.getRuntime().exec(commandCreator(), null, new File(gameDir));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-            Variables.launchThread.setDaemon(true);
-            Variables.launchThread.start();
-            Main.close();
-
-        } else Variables.mainController.addToLog("Falsche Anmeldedaten. Bitte diese überprüfen!");
-    }
-
-    public static boolean requestUser(String username, String password){
-        YggdrasilUserAuthentication authentication = (YggdrasilUserAuthentication)(new YggdrasilAuthenticationService(Proxy.NO_PROXY, "1")).createUserAuthentication(Agent.MINECRAFT);
-        authentication.setUsername(username);
-        authentication.setPassword(password);
-        try {
-            authentication.logIn();
-            map.put("accessToken", authentication.getAuthenticatedToken());
-            map.put("uuid", authentication.getSelectedProfile().getId().toString().replace("-", ""));
-            map.put("username", authentication.getSelectedProfile().getName());
-            map.put("userType", authentication.getUserType().getName());
-            map.put("userProperties", (new GsonBuilder()).registerTypeAdapter(PropertyMap.class, new OldPropertyMapSerializer()).create().toJson(authentication.getUserProperties()));
-            Platform.runLater(() -> Variables.mainController.changeHead(authentication.getSelectedProfile().getName()));
-            return true;
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-            return false;
-        }
-
+        Variables.mainController.addToLog("Das Spiel wird in ein paar Sekunden gestartet!");
+        Variables.save.saveVariables();
+        System.out.println(commandCreator());
+        Variables.launchThread = new Thread(() -> {
+            try {
+                Runtime.getRuntime().exec(commandCreator(), null, new File(gameDir));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        Variables.launchThread.setDaemon(true);
+        Variables.launchThread.start();
+        Main.close();
     }
 
     private static String commandCreator(){
@@ -81,8 +59,8 @@ public class Launch {
         list.add(" --assetIndex 1.7.10");
         list.add(" --gameDir \"" + gameDir + "\"");
         list.add(" --version 1.7.10");
-        list.add(" --username " + map.get("username"));
-        list.add(" --userProperties " + map.get("userProperties"));
+        list.add(" --username " + map.get("displayName"));
+        list.add(" --userProperties " + map.get("prop"));
         list.add(" --userType " + map.get("userType"));
         list.add(" --uuid " + map.get("uuid"));
         list.add(" --tweakClass " + tweakClass);

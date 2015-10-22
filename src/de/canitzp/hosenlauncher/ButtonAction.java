@@ -20,8 +20,6 @@ public class ButtonAction {
         Variables.mainController.settingsBtn.setDisable(true);
         Variables.mainController.startBtn.setDisable(true);
         Variables.mainController.infoBtn.setDisable(true);
-        Variables.settingsController.userField.setText(Variables.mainController.userField.getText());
-        Variables.settingsController.passField.setText(Variables.mainController.passField.getText());
     }
 
     public static void saveSettings(){
@@ -38,8 +36,6 @@ public class ButtonAction {
             Variables.settingsController.ramMin.setText("128");
         }
         Variables.save.getVariables();
-        Variables.mainController.userField.setText(Variables.settingsController.userField.getText());
-        Variables.mainController.passField.setText(Variables.settingsController.passField.getText());
         Variables.mainController.infoBtn.setDisable(false);
         Variables.mainController.settingsBtn.setDisable(false);
         Variables.mainController.startBtn.setDisable(false);

@@ -1,6 +1,7 @@
 package de.canitzp.hosenlauncher.controller;
 
 import de.canitzp.hosenlauncher.*;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -15,13 +16,12 @@ import java.io.FileInputStream;
 @SuppressWarnings("unchecked")
 public class MainController {
 
+    public Label userLabel;
     private Main main;
     @FXML public ImageView headImage;
     @FXML public ProgressBar progress = new ProgressBar();
     @FXML public Button infoBtn;
     @FXML public Button startBtn;
-    @FXML public PasswordField passField;
-    @FXML public TextField userField;
     @FXML public Button settingsBtn;
     @FXML public ComboBox dropDown;
     @FXML public TextArea logField;
@@ -38,8 +38,6 @@ public class MainController {
     }
 
     public void startGame(ActionEvent actionEvent) {
-        Variables.username = this.userField.getText();
-        Variables.password = this.passField.getText();
         Variables.startThread = new Thread() {
             public void run() {
                 ButtonAction.startGame();
@@ -61,9 +59,8 @@ public class MainController {
     }
 
     public void startup() {
-        if(new File(Variables.launcherPath.getAbsolutePath() + File.separator + "head.png").exists()) headImage.setImage(new Image(new File(Variables.launcherPath.getAbsolutePath() + File.separator + "head.png").toURI().toString()));
-        this.userField.setText(Variables.username);
-        this.passField.setText(Variables.password);
+        changeHead();
+        userLabel.setText("Angemeldet als: " + Variables.loginMap.get("displayName"));
         this.dropDown.setValue(Modpacks.HOSENLAB2.getDisplayName());
         this.logField.setEditable(false);
         this.settingsBtn.setGraphic(new ImageView(new Image(Main.class.getResourceAsStream("pictures/settings.png"))));
@@ -87,8 +84,8 @@ public class MainController {
         }
     }
 
-    public void changeHead(String username){
-        FileManager.download(new File(Variables.launcherPath.getAbsolutePath() + File.separator + "head.png"), "http://www.minotar.net/helm/" + username + "/24");
+    public void changeHead(){
+        FileManager.download(new File(Variables.launcherPath.getAbsolutePath() + File.separator + "head.png"), "http://www.minotar.net/helm/" + Variables.loginMap.get("displayName") + "/24");
         headImage.setImage(new Image(new File(Variables.launcherPath.getAbsolutePath() + File.separator + "head.png").toURI().toString()));
     }
 }

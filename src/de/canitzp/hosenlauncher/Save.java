@@ -92,18 +92,15 @@ public class Save extends File{
 
     public void saveVariables() {
         try {
-            if (Variables.username != null || !Objects.equals(Variables.username, "")) {
-                addToList("username", Variables.username);
-            } else newVars();
-            if (Variables.password != null || !Objects.equals(Variables.password, "")) {
-                savePassword(Variables.password);
-            } else newVars();
+            if(Variables.loginMap != null){
+                addToList("loginMap", Variables.loginMap);
+            }
             if (!Objects.equals(Integer.toString(Variables.maxRam), "")) {
                 addToList("maxRam", Variables.maxRam);
-            } else newVars();
+            }
             if (!Objects.equals(Integer.toString(Variables.minRam), "")) {
                 addToList("minRam", Variables.minRam);
-            } else newVars();
+            }
             addToList("debug", Variables.debug);
             save();
         } catch (Throwable e) {
@@ -112,22 +109,7 @@ public class Save extends File{
 
     }
 
-    private void newVars(){
-        addToList("username", null);
-        addToList("password", null);
-        addToList("maxRam", 1024);
-        addToList("minRam", 128);
-        addToList("debug", false);
-        try {
-            save();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void getVariables() {
-        Variables.username = Variables.settingsController.userField.getText();
-        Variables.password = Variables.settingsController.passField.getText();
         Variables.maxRam = Integer.parseInt(Variables.settingsController.ramMax.getText());
         Variables.minRam = Integer.parseInt(Variables.settingsController.ramMin.getText());
         Variables.debug = Variables.settingsController.debugBool.isSelected();
