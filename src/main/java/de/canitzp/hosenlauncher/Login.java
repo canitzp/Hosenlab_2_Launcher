@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 public class Login extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("fxml/Login.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
         AnchorPane pane = loader.load();
         primaryStage.setTitle("Hosenlauncher BETA");
         LoginController loginController = loader.getController();

@@ -15,7 +15,7 @@ public class Settings extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("fxml/Settings.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Settings.fxml"));
             AnchorPane pane = loader.load();
             primaryStage.setMaxWidth(350D);
             primaryStage.setMaxHeight(225D);

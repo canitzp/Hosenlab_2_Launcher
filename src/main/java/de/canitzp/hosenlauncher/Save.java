@@ -35,7 +35,7 @@ public class Save extends File{
     }
 
     public void savePassword(String password) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        String keyStr = Key.key;
+        String keyStr = "abc"; // TODO: Key class/interface?
         byte[] key = (keyStr).getBytes("UTF-8");
         MessageDigest sha = MessageDigest.getInstance("MD5");
         key = sha.digest(key);
@@ -73,7 +73,7 @@ public class Save extends File{
     public String readPassword(){
         try {
             Object o = read("password");
-            String keyStr = Key.key;
+            String keyStr = "abc"; // TODO: Key class/interface?
             byte[] key = (keyStr).getBytes("UTF-8");
             MessageDigest sha = MessageDigest.getInstance("MD5");
             key = sha.digest(key);
