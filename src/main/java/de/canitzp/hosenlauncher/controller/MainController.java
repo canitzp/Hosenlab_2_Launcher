@@ -1,7 +1,6 @@
 package de.canitzp.hosenlauncher.controller;
 
 import de.canitzp.hosenlauncher.*;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -11,7 +10,6 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileInputStream;
 
 @SuppressWarnings("unchecked")
 public class MainController {

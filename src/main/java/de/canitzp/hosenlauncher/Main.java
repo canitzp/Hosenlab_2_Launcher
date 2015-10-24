@@ -50,7 +50,7 @@ public class Main extends Application {
 
     public static void createMainWindow() {
         try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("fxml/Main.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/fxml/Main.fxml"));
             AnchorPane pane = loader.load();
             primaryStage.setTitle("Hosenlauncher BETA");
             MainController mainController = loader.getController();
@@ -72,7 +72,7 @@ public class Main extends Application {
 
     private void login(){
         try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("fxml/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             AnchorPane pane = loader.load();
             primaryStage.setTitle("Hosenlauncher BETA");
             LoginController loginController = loader.getController();
