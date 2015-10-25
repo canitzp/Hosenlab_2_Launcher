@@ -1,0 +1,28 @@
+.text {
+    -fx-font-smoothing-type: gray; /* Always enable font anti aliasing/smoothing */
+}
+
+/*noinspection CssInvalidPropertyValue*/
+.root {
+    -fx-font-family: "Open Sans";
+    -fx-font-size: 13;
+}
+
+/*noinspection CssInvalidPropertyValue*/
+.light {
+    -fx-font-family: "Open Sans Light";
+}
+
+/*noinspection CssInvalidPropertyValue*/
+.bold {
+    -fx-font-family: "Open Sans Bold";
+}
+
+/*noinspection CssInvalidPropertyValue*/
+.italic {
+    -fx-font-family: "Open Sans Italic";
+}
+
+.caption {
+    -fx-font-size: 25;
+}

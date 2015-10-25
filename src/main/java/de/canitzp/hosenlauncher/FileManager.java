@@ -1,5 +1,7 @@
 package de.canitzp.hosenlauncher;
 
+import de.canitzp.hosenlauncher.gui.Controllers;
+import de.canitzp.hosenlauncher.gui.controllers.MainController;
 import javafx.application.Platform;
 import org.apache.commons.io.FileUtils;
 
@@ -10,18 +12,17 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class FileManager {
-
     public static void downloadFile(String folder, String url) {
         File file = new File(Variables.launcherPath + File.separator + "Modpacks" + File.separator + folder);
         download(file, url);
     }
 
-    public static void download(File file, String url){
+    public static void download(File file, String url) {
         if (file.exists()) file.delete();
         file.getParentFile().mkdirs();
         try {
             URL lib;
-            if(url.startsWith("http://") || url.startsWith("https://")){
+            if (url.startsWith("http://") || url.startsWith("https://")) {
                 lib = new URL(url);
             } else {
                 lib = new URL("http://" + url);
@@ -41,9 +42,13 @@ public class FileManager {
                 if (p == i) {
                     System.out.println(i + "%");
                     final double j = i;
-                    Platform.runLater(() ->{
-                        if(j < 99) Variables.mainController.progress.setProgress((p * onlineFileSize / 100) / onlineFileSize);
-                        else Variables.mainController.progress.setProgress(0.0D);
+                    Platform.runLater(() -> {
+                        MainController mainController = Hosenlauncher.getInstance().getGui().get(Controllers.MAIN);
+                        if (j < 99) {
+                            mainController.setProgress((p * onlineFileSize / 100) / onlineFileSize);
+                        } else {
+                            mainController.setProgress(0.0D);
+                        }
                     });
                     i++;
                 }
@@ -104,7 +109,10 @@ public class FileManager {
     This UnZip Method came from: http://www.mkyong.com/java/how-to-decompress-files-from-a-zip-file/
      */
     public static void unZipIt(String zipFile, String outputFolder) {
-        Variables.mainController.addToLog("Entpacken gestartet!");
+        Hosenlauncher launcher = Hosenlauncher.getInstance();
+        MainController mainController = launcher.getGui().get(Controllers.MAIN);
+        mainController.addToLog("Entpacke Archiv");
+
         byte[] buffer = new byte[1024];
         try {
             //create input directory is not exists
@@ -123,7 +131,7 @@ public class FileManager {
                     continue;
                 }
                 File newFile = new File(outputFolder + File.separator + fileName);
-                System.out.println("file unzip : " + newFile.getAbsoluteFile());
+                launcher.getLogger().info("Unpacking archive: " + newFile.getAbsoluteFile());
                 //create all non exists folders
                 //else you will hit FileNotFoundException for compressed folder
                 new File(newFile.getParent()).mkdirs();
@@ -137,10 +145,10 @@ public class FileManager {
             }
             zis.closeEntry();
             zis.close();
-            System.out.println("Done");
-            Variables.mainController.addToLog("Entpacken vollst\u00e4ndig!");
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            launcher.getLogger().info("Done unpacking");
+            mainController.addToLog("Entpacken vollst\u00e4ndig!");
+        } catch (IOException e) {
+            launcher.getLogger().error("Failed to unpack archive", e);
         }
     }
 
@@ -165,7 +173,7 @@ public class FileManager {
             if (modpack.getDescLink() != null) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(new URL("http://" + modpack.getDescLink()).openStream()));
                 String line;
-                while((line =  br.readLine()) != null){
+                while ((line = br.readLine()) != null) {
                     stringBuffer.append(line).append("\n");
                 }
             }
@@ -181,7 +189,7 @@ public class FileManager {
             if (modpack.getChangelog() != null) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(new URL("http://" + modpack.getChangelog()).openStream()));
                 String line;
-                while((line =  br.readLine()) != null){
+                while ((line = br.readLine()) != null) {
                     stringBuffer.append(line).append("\n");
                 }
             }
@@ -192,9 +200,9 @@ public class FileManager {
     }
 
 
-    public static void createFile(String folder, String toWrite){
+    public static void createFile(String folder, String toWrite) {
         File file = new File(Variables.launcherPath.getAbsolutePath() + folder);
-        if(file.exists()) file.delete();
+        if (file.exists()) file.delete();
         file.getParentFile().mkdirs();
         try {
             BufferedWriter br = new BufferedWriter(new FileWriter(file));

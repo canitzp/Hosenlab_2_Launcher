@@ -1,6 +1,5 @@
 package de.canitzp.hosenlauncher;
 
-import de.canitzp.hosenlauncher.controller.SettingsController;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -110,8 +109,8 @@ public class Save extends File{
     }
 
     public void getVariables() {
-        Variables.maxRam = Integer.parseInt(Variables.settingsController.ramMax.getText());
+        /*Variables.maxRam = Integer.parseInt(Variables.settingsController.ramMax.getText());
         Variables.minRam = Integer.parseInt(Variables.settingsController.ramMin.getText());
-        Variables.debug = Variables.settingsController.debugBool.isSelected();
+        Variables.debug = Variables.settingsController.debugBool.isSelected();*/
     }
 }

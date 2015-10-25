@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.canitzp.hosenlauncher.gui.controllers.UpdateController">
+   <children>
+      <Label text="%label.update-available" />
+      <TextArea fx:id="changelogTextArea" prefHeight="200.0" prefWidth="200.0" />
+      <HBox alignment="CENTER_LEFT" spacing="5.0">
+         <children>
+            <Label text="%label.update-now" />
+            <Button fx:id="yesButton" defaultButton="true" mnemonicParsing="false" onAction="#onYesButtonAction" text="%button.yes" />
+            <Button fx:id="noButton" mnemonicParsing="false" onAction="#onNoButtonAction" text="%button.no" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>

@@ -1,11 +1,9 @@
 package de.canitzp.hosenlauncher;
 
-import de.canitzp.hosenlauncher.controller.DescriptionController;
-import de.canitzp.hosenlauncher.controller.MainController;
-import de.canitzp.hosenlauncher.controller.SettingsController;
-import de.canitzp.hosenlauncher.controller.UpdateWindowController;
-import javafx.application.Platform;
-import javafx.stage.Stage;
+import de.canitzp.hosenlauncher.gui.controllers.ModpackInfoController;
+import de.canitzp.hosenlauncher.gui.controllers.MainController;
+import de.canitzp.hosenlauncher.gui.controllers.SettingsController;
+import de.canitzp.hosenlauncher.gui.controllers.UpdateController;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -18,13 +16,8 @@ public class Variables {
     public static int maxRam = 1024, minRam =  128;
     public static boolean debug, outputOn = false, isSettings, isDesc;
     public static File launcherPath = new File("Hosenlab2Launcher" + File.separator);
-    public static Thread startThread, launchThread;
     public static Save save = new Save(launcherPath.getAbsolutePath() + "/launcher.ctp");
-    public static MainController mainController;
-    public static SettingsController settingsController;
-    public static UpdateWindowController updateController;
     public static InputStream input;
-    public static DescriptionController descriptionController;
     public static File launcherSettings = new File(launcherPath.getAbsolutePath() + "/settings.txt");
     public static Map<String, Object> loginMap;
 
@@ -61,7 +54,7 @@ public class Variables {
         Variables.debug = debug;
     }
 
-    public static void startOutput(){
+    /*public static void startOutput(){
         outputOn = true;
         Thread thread = new Thread(){
             @Override
@@ -78,5 +71,5 @@ public class Variables {
             }
         };
         thread.start();
-    }
+    }*/
 }
