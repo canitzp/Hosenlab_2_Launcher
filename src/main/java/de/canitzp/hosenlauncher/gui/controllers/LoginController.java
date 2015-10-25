@@ -7,6 +7,8 @@ import com.mojang.authlib.exceptions.AuthenticationException;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigValueFactory;
 import de.canitzp.hosenlauncher.Launch;
 import de.canitzp.hosenlauncher.gui.Controllers;
 import de.canitzp.hosenlauncher.gui.GuiController;
@@ -14,6 +16,7 @@ import de.canitzp.hosenlauncher.gui.exceptions.ControllerLoadException;
 import de.canitzp.hosenlauncher.gui.exceptions.InvalidFxmlException;
 import de.canitzp.hosenlauncher.gui.exceptions.NoSuchControllerException;
 import de.canitzp.hosenlauncher.util.AlertBuilder;
+import de.canitzp.hosenlauncher.util.ConfigUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -23,6 +26,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.Proxy;
 import java.util.Map;
@@ -37,10 +41,33 @@ public class LoginController extends GuiController {
     @FXML
     private Button exitButton;
 
+    private Config config;
+
+    @Override
+    protected void initialize() {
+        config = getLauncher().getConfig();
+
+        String previousUsername = config.getString("previous-username");
+        if (config.getBoolean("remember-username") && !Strings.isNullOrEmpty(previousUsername)) {
+            usernameField.setText(previousUsername);
+            passwordField.requestFocus();
+        }
+    }
+
     @FXML
     public void onLoginButtonAction(ActionEvent event) {
         if (!Strings.isNullOrEmpty(usernameField.getText()) && !Strings.isNullOrEmpty(passwordField.getText())) {
             if (authenticate()) {
+                if (config.getBoolean("remember-username")) {
+                    config = config.withValue("previous-username", ConfigValueFactory.fromAnyRef(usernameField.getText()));
+                    try {
+                        ConfigUtils.save(config, getLauncher().getConfigFile());
+                        getLauncher().setConfig(config);
+                    } catch (FileNotFoundException e) {
+                        getLauncher().getLogger().error("Failed to save config", e);
+                    }
+                }
+
                 try {
                     getGui().load(Controllers.MAIN, "/views/main.fxml", "title.launcher");
                 } catch (ControllerLoadException | InvalidFxmlException e) {
